@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   if (!url) return res.status(400).json({ error: 'Missing url parameter' });
 
-  const apiUrl = `https://instagram-downloader-api-six.vercel.app/?url=${encodeURIComponent(url)}`;
+  const apiUrl = `https://flexcoder.rf.gd/instagram.php?url=${encodeURIComponent(url)}`;
 
   try {
     const response = await fetch(apiUrl);
