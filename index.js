@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   if (!url) return res.status(400).json({ error: 'Missing url parameter' });
 
-  const apiUrl = `https://storebix.serv00.net/instagram.php?url=${encodeURIComponent(url)}`;
+  const apiUrl = `https://storebix.serv00.net/instagram?url=${encodeURIComponent(url)}`;
 
   try {
     const response = await fetch(apiUrl);
