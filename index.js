@@ -3,33 +3,28 @@ import fetch from 'node-fetch';
 export default async function handler(req, res) {
   const { url } = req.query;
 
-  if (!url) {
-    return res.status(400).json({ error: 'Missing "url" query parameter' });
-  }
+  if (!url) return res.status(400).json({ error: 'Missing url parameter' });
 
-  const apiUrl = `https://facebook-video.vercel.app/?url=${encodeURIComponent(url)}`;
+  const apiUrl = `https://storebix.serv00.net/instagram?url=${encodeURIComponent(url)}`;
 
   try {
     const response = await fetch(apiUrl);
-    const contentType = response.headers.get("content-type") || "";
 
-    // If the response is not OK or not JSON, return the raw body as text
-    if (!response.ok || !contentType.includes("application/json")) {
-      const body = await response.text();
-      return res.status(response.status || 500).json({
-        error: 'API did not return valid JSON',
-        body
-      });
+    if (!response.ok) {
+      return res.status(response.status).json({ error: `API error: ${response.statusText}` });
     }
 
-    // Parse JSON and return it directly to user
-    const data = await response.json();
-    return res.status(200).json(data);
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await response.text();
+      return res.status(500).json({ error: 'Invalid JSON response from API', body: text });
+    }
 
+    const data = await response.json();
+
+    res.status(200).json(data);
   } catch (error) {
-    return res.status(500).json({
-      error: 'Internal fetch error',
-      details: error.message
-    });
+    console.error('Fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch data', details: error.message });
   }
 }
